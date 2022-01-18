@@ -64,6 +64,14 @@ body {
 
 /* COLORS */
 
+.white {
+    color: white;
+}
+
 .bg-lightblue {
     background-color: lightskyblue;
+}
+
+.bomb {
+    background-color: red;
 }

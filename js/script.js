@@ -1,4 +1,3 @@
-console.log('JS OK!');
 /* L'utente indica un livello di difficoltà in base al quale viene generata una griglia di gioco quadrata, in cui ogni cella contiene un numero tra quelli compresi in un range:
      con difficoltà 1 => tra 1 e 100
      con difficoltà 2 => tra 1 e 81
@@ -23,56 +22,117 @@ function play() {
     playButton.innerText = 'RICOMINCIA';
     grid.innerText = '';
 
-    let attemps = 0;
+    let attempts = 0;
     const totalBombs = 16;
     let column;
     switch (difficulty.value) {
         case "":
             break;
         case "Easy":
-            selectedCell(100, setLevel(100));
+            // generateGrid(100, setLevel(100), generateBombs(totalBombs, 100));
+            column = 10;
             break;
         case "Hard":
-            selectedCell(49, setLevel(49));
+            // generateGrid(49, setLevel(49), generateBombs(totalBombs, 49));
+            column = 7;
             break;
         default:
-            selectedCell(81, setLevel(81));
+            // generateGrid(81, setLevel(81), generateBombs(totalBombs, 81));
+            column = 9;
 
     }
     const totalCells = column * column;
     const maxAttempts = totalCells - totalBombs;
     // #FUNZIONI
-    function createCell(index) {
+    //Creo la cella
+    function createCell(index, cellsPerRow) {
         const cell = document.createElement('div');
         cell.className = 'cell';
         grid.appendChild(cell);
-        cell.setAttribute('id', index + 1);
+        const wh = `calc(100% / ${cellsPerRow})`;
+        cell.style.height = wh;
+        cell.style.width = wh;
+        cell.setAttribute('id', index);
         cell.innerText = cell.id;
         return cell;
     }
-
-    function selectedCell(totalCells, level) {
+    //Genero la griglia
+    function generateGrid(totalCells, cellsPerRow, bombs) {
         for (let i = 0; i < totalCells; i++) {
-            const cell = createCell(i);
-            cell.classList.add(level);
-            cell.addEventListener('click', function() {
-                cell.classList.toggle('bg-lightblue');
-            })
+            const cell = createCell(i + 1, cellsPerRow);
+            // cell.classList.add(level);
+            cell.addEventListener('click', (event) => onCellClick(event.target, bombs, i));
+            grid.appendChild(cell);
+        }
+    }
+    //Imposto il livello
+    // function setLevel(diff) {
+    //     let result;
+    //     if (diff <= 50) return result = 'cellHard';
+    //     else if (diff > 50 && diff < 100) return result = 'cellNormal';
+    //     else return result = 'cellEasy';
+    // }
+    //Genero una bomba
+    function generateBombs(totalBombs, totalNumber) {
+        const bombs = [];
+        while (bombs.length < totalBombs) { // il numero di bombe è inferiore a 16
+            const randNumber = getRandomNumber(1, totalNumber);
+            if (!bombs.includes(randNumber)) { // Controllo se c'è nell'array di bombe
+                bombs.push(randNumber);
+            }
+        }
+        bombs.sort();
+        return bombs;
+    }
+    //Gestisco l'evento al click
+    function onCellClick(clickedCell, bombs, number) {
+        // clickedCell.removeEventListener("click", onCellClick);
+        console.log('ok');
+
+        // Controllo se è una bomba
+        if (bombs.includes(number)) {
+            gameOver(bombs, attempts, true);
+        } else {
+            clickedCell.classList.add("bg-lightblue")
+            attempts++;
+            if (attempts === maxAttempts) {
+                gameOver(bombs, attempts, false);
+            }
+        }
+    }
+    //Fine partita
+    function gameOver(bombs, attempts, hasLost) {
+        // const allCells = grid.querySelectorAll('.cell');
+
+        // for (let i = 0; i < allCells.length; i++) {
+        //     allCells[i].removeEventListener('click', onCellClick(allCells[i], bombs, i));
+        // }
+        showBombs(bombs);
+
+        const message = document.createElement('h2');
+        message.className = 'message';
+
+        const messageText = hasLost ? `HAI PERSO! (Questo è il tuo punteggio: ${attempts})` : `HAI VINTO!!!!!!!!`
+        message.innerText = messageText;
+        grid.appendChild(message);
+
+    }
+
+    function showBombs(bombs) {
+        const cells = document.querySelectorAll('.cell');
+        for (let i = 1; i < totalCells; i++) {
+            const cell = cells[i];
+            const cellNumber = parseInt(cell.innerText);
+            if (bombs.includes(cellNumber)) {
+                cell.classList.add('bomb');
+            }
         }
     }
 
-    function setLevel(diff) {
-        let result;
-        if (diff <= 50) return result = 'cellHard';
-        else if (diff > 50 && diff < 100) return result = 'cellNormal';
-        else return result = 'cellEasy';
-    }
-
-
-
-
     // !PROGRAMMA
-
+    const bombs = generateBombs(totalBombs, totalCells);
+    generateGrid(totalCells, column, bombs);
+    console.log('le bombe sono' + bombs);
 
 }
 playButton.addEventListener('click', () => play());
