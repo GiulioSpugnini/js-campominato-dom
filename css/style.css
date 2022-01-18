@@ -1,0 +1,62 @@
+* {
+    margin: 0 auto;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+header {
+    background-color: cadetblue;
+    line-height: 100px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+body {
+    background-color: darkslategrey;
+}
+
+#difficulty {
+    height: 20px;
+}
+
+#grid {
+    max-width: 600px;
+    margin-top: 100px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.cell {
+    border: 1px solid white;
+    color: orange;
+    text-align: center;
+    padding: 20px;
+    cursor: pointer;
+}
+
+.cellHard {
+    height: calc(100% /7);
+    width: calc(100% /7);
+}
+
+.cellNormal {
+    height: calc(100% /9);
+    width: calc(100% /9);
+}
+
+.cellEasy {
+    height: calc(100% /10);
+    width: calc(100% /10);
+}
+
+.d-none {
+    display: none;
+}
+
+
+/* COLORS */
+
+.bg-lightblue {
+    background-color: lightskyblue;
+}
