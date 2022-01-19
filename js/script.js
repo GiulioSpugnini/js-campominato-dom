@@ -29,15 +29,15 @@ function play() {
         case "":
             break;
         case "Easy":
-            // generateGrid(100, setLevel(100), generateBombs(totalBombs, 100));
+
             column = 10;
             break;
         case "Hard":
-            // generateGrid(49, setLevel(49), generateBombs(totalBombs, 49));
+
             column = 7;
             break;
         default:
-            // generateGrid(81, setLevel(81), generateBombs(totalBombs, 81));
+
             column = 9;
 
     }
@@ -60,18 +60,10 @@ function play() {
     function generateGrid(totalCells, cellsPerRow, bombs) {
         for (let i = 0; i < totalCells; i++) {
             const cell = createCell(i + 1, cellsPerRow);
-            // cell.classList.add(level);
             cell.addEventListener('click', onCellClick);
             grid.appendChild(cell);
         }
     }
-    //Imposto il livello
-    // function setLevel(diff) {
-    //     let result;
-    //     if (diff <= 50) return result = 'cellHard';
-    //     else if (diff > 50 && diff < 100) return result = 'cellNormal';
-    //     else return result = 'cellEasy';
-    // }
     //Genero una bomba
     function generateBombs(totalBombs, totalNumber) {
         const bombs = [];
