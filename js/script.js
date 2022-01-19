@@ -61,7 +61,7 @@ function play() {
         for (let i = 0; i < totalCells; i++) {
             const cell = createCell(i + 1, cellsPerRow);
             // cell.classList.add(level);
-            cell.addEventListener('click', (event) => onCellClick(event.target, bombs, i));
+            cell.addEventListener('click', onCellClick);
             grid.appendChild(cell);
         }
     }
@@ -85,15 +85,17 @@ function play() {
         return bombs;
     }
     //Gestisco l'evento al click
-    function onCellClick(clickedCell, bombs, number) {
-        // clickedCell.removeEventListener("click", onCellClick);
+    function onCellClick(event) {
+        const cell = event.target;
+        cell.removeEventListener('click', onCellClick);
         console.log('ok');
 
         // Controllo se è una bomba
+        let number = parseInt(cell.id);
         if (bombs.includes(number)) {
             gameOver(bombs, attempts, true);
         } else {
-            clickedCell.classList.add("bg-lightblue")
+            cell.classList.add("bg-lightblue")
             attempts++;
             if (attempts === maxAttempts) {
                 gameOver(bombs, attempts, false);
@@ -102,11 +104,12 @@ function play() {
     }
     //Fine partita
     function gameOver(bombs, attempts, hasLost) {
-        // const allCells = grid.querySelectorAll('.cell');
+        const allCells = grid.querySelectorAll('.cell');
 
-        // for (let i = 0; i < allCells.length; i++) {
-        //     allCells[i].removeEventListener('click', onCellClick(allCells[i], bombs, i));
-        // }
+        for (let i = 0; i < allCells.length; i++) {
+            allCells[i].removeEventListener('click', onCellClick);
+        }
+
         showBombs(bombs);
 
         const message = document.createElement('h2');
@@ -120,17 +123,16 @@ function play() {
 
     function showBombs(bombs) {
         const cells = document.querySelectorAll('.cell');
-        for (let i = 1; i < totalCells; i++) {
+        for (let i = 0; i < totalCells; i++) {
             const cell = cells[i];
             const cellNumber = parseInt(cell.innerText);
-            if (bombs.includes(cellNumber)) {
-                cell.classList.add('bomb');
-            }
+            cell.removeEventListener('click', onCellClick);
+            if (bombs.includes(cellNumber)) cell.classList.add('bomb');
         }
     }
 
     // !PROGRAMMA
-    const bombs = generateBombs(totalBombs, totalCells);
+    bombs = generateBombs(totalBombs, totalCells);
     generateGrid(totalCells, column, bombs);
     console.log('le bombe sono' + bombs);
 
